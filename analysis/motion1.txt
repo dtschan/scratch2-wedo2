@@ -1,0 +1,138 @@
+State: PoweredOn
+Scanning...
+
+Peripheral ID:24:71:89:09:E1:4D, NAME:(LPF2 Smart Hub 2 I/O)
+  Local Name        = LPF2 Smart Hub 2 I/O
+  TX Power Level    = 0
+  Manufacturer Data = []
+  Service Data      = []
+
+Connected
+Service: 1800 (Generic Access)
+  Characteristic  2a00 (Device Name)
+    properties    read 
+    value         4c50463220536d61727420487562203220492f4f | "LPF2 Smart Hub 2 I/O"
+  Characteristic  2a01 (Appearance)
+    properties    read 
+    value         0000 | "\x00\x00"
+  Characteristic  2a04 (Peripheral Preferred Connection Parameters)
+    properties    read 
+    value         5000a0000000e803 | "P\x00\xa0\x00\x00\x00\xe8\x03"
+
+Service: 1801 (Generic Attribute)
+  Characteristic  2a05 (Service Changed)
+    properties    indicate 
+  Descriptor      2902 (Client Characteristic Configuration)
+    value         0000 | "\x00\x00"
+
+Service: 000015231212efde1523785feabcd123
+  Characteristic  000015241212efde1523785feabcd123
+    properties    read write 
+    value         4c50463220536d61727420487562203220492f4f | "LPF2 Smart Hub 2 I/O"
+  Descriptor      2901 (Characteristic User Description)
+    value         4e616d652043686172 | "Name Char"
+  Characteristic  000015261212efde1523785feabcd123
+    properties    read notify 
+    value         00 | "\x00"
+  Descriptor      2902 (Client Characteristic Configuration)
+    value         0000 | "\x00\x00"
+  Descriptor      2901 (Characteristic User Description)
+    value         427574746f6e2043686172 | "Button Char"
+  Characteristic  000015271212efde1523785feabcd123
+    properties    notify 
+notified: 00 | "\x00"
+  Descriptor      2902 (Client Characteristic Configuration)
+    value         0000 | "\x00\x00"
+  Descriptor      2901 (Characteristic User Description)
+    value         506f727420547970652043686172 | "Port Type Char"
+  Characteristic  000015281212efde1523785feabcd123
+    properties    read notify 
+notified: 01 01 00 23 00 00 00 10 00 00 00 10 | "\x01\x01\x00#\x00\x00\x00\x10\x00\x00\x00\x10"
+    value         00 | "\x00"
+notified: 03 01 33 15 01 00 00 00 01 00 00 00 | "\x03\x013\x15\x01\x00\x00\x00\x01\x00\x00\x00"
+notified: 04 01 34 14 01 00 00 00 01 00 00 00 | "\x04\x014\x14\x01\x00\x00\x00\x01\x00\x00\x00"
+  Descriptor      2902 (Client Characteristic Configuration)
+notified: 05 01 35 16 01 00 00 00 01 00 00 00 | "\x05\x015\x16\x01\x00\x00\x00\x01\x00\x00\x00"
+notified: 06 01 36 17 01 00 00 00 01 00 00 00 | "\x06\x016\x17\x01\x00\x00\x00\x01\x00\x00\x00"
+    value         0000 | "\x00\x00"
+  Descriptor      2901 (Characteristic User Description)
+    value         4c6f7720566f6c7461676520616c657274 | "Low Voltage alert"
+  Characteristic  000015291212efde1523785feabcd123
+    properties    read notify 
+    value         00 | "\x00"
+  Descriptor      2902 (Client Characteristic Configuration)
+    value         0000 | "\x00\x00"
+  Descriptor      2901 (Characteristic User Description)
+    value         486967682043757272656e7420616c657274 | "High Current alert"
+  Characteristic  0000152a1212efde1523785feabcd123
+    properties    read notify 
+    value         00 | "\x00"
+  Descriptor      2902 (Client Characteristic Configuration)
+    value         0000 | "\x00\x00"
+  Descriptor      2901 (Characteristic User Description)
+    value         4c6f77205369676e616c20616c657274 | "Low Signal alert"
+  Characteristic  0000152b1212efde1523785feabcd123
+    properties    write 
+  Descriptor      2901 (Characteristic User Description)
+    value         5475726e206f666620646576696365 | "Turn off device"
+  Characteristic  0000152c1212efde1523785feabcd123
+    properties    read write 
+    value         01 | "\x01"
+  Descriptor      2901 (Characteristic User Description)
+    value         56636320706f727420636f6e74726f6c | "Vcc port control"
+  Characteristic  0000152d1212efde1523785feabcd123
+    properties    read 
+    value         00 | "\x00"
+  Descriptor      2901 (Characteristic User Description)
+    value         42617474657279207479706520496e64696361746f72 | "Battery type Indicator"
+  Characteristic  0000152e1212efde1523785feabcd123
+    properties    write 
+  Descriptor      2901 (Characteristic User Description)
+    value         446973636f6e6e6563742043686172 | "Disconnect Char"
+
+Service: 00004f0e1212efde1523785feabcd123
+  Characteristic  000015601212efde1523785feabcd123
+    properties    read notify 
+    value          | ""
+  Descriptor      2902 (Client Characteristic Configuration)
+    value         0000 | "\x00\x00"
+  Descriptor      2901 (Characteristic User Description)
+    value         53656e736f722056616c7565 | "Sensor Value"
+  Characteristic  000015611212efde1523785feabcd123
+    properties    notify 
+notified: 02 06 03 | "\x02\x06\x03"
+  Descriptor      2902 (Client Characteristic Configuration)
+    value         0000 | "\x00\x00"
+  Descriptor      2901 (Characteristic User Description)
+    value         56616c756520666f726d6174 | "Value format"
+  Characteristic  000015631212efde1523785feabcd123
+    properties    writeWithoutResponse write 
+notified: 02 06 17 00 01 00 00 00 00 00 01 | "\x02\x06\x17\x00\x01\x00\x00\x00\x00\x00\x01"
+  Descriptor      2901 (Characteristic User Description)
+    value         496e70757420436f6d6d616e64 | "Input Command"
+  Characteristic  000015651212efde1523785feabcd123
+    properties    writeWithoutResponse write 
+  Descriptor      2901 (Characteristic User Description)
+    value         4f757470757420436f6d6d616e64 | "Output Command"
+
+Service: 180a (Device Information)
+  Characteristic  2a26 (Firmware Revision String)
+    properties    read 
+    value         312e302e30392e30303030 | "1.0.09.0000"
+  Characteristic  2a28 (Software Revision String)
+    properties    read 
+    value         322e302e30302e30303030 | "2.0.00.0000"
+  Characteristic  2a29 (Manufacturer Name String)
+    properties    read 
+    value         4c45474f2053797374656d20412f53 | "LEGO System A/S"
+
+Service: 180f (Battery Service)
+  Characteristic  2a19 (Battery Level)
+    properties    read notify 
+    value         64 | "d"
+  Descriptor      2902 (Client Characteristic Configuration)
+    value         0000 | "\x00\x00"
+
+Waiting for 5 seconds to get some notifiations, if any.
+Disconnected
+Done
