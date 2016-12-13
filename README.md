@@ -52,4 +52,10 @@ Usage
 Notes
 -----
 
-At the moment only light and motor controls are working.
+At the moment the following WeDo 2.0 features are supported:
+
+* Smarthub button
+* Smarthub light
+* Medium motor
+* Tilt sensor in default tilt mode (any, up, down, left, right)
+* Motion sensor  in default distance mode (distance 0 - 10)
