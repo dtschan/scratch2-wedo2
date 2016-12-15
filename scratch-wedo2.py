@@ -129,28 +129,52 @@ def setLight(color):
     req.write_by_handle(HANDLE_OUTPUT_COMMAND, "\x06\x04\x01" + chr(color))
     return ""
 
+@app.route("/setMotorDirection/<motor>/<direction>")
+def setMotorDirection(motor, direction):
+    DIRECTION = ["that way", "other way", "this way"]
+    try:
+        motorDirection[motor] = DIRECTION.index(direction) - 1
+    except Exception as e:
+      logging.error(traceback.format_exc())
+    
+    print("Set motor direction of " + motor + " to " + direction)
+
+    return ""
+ 
 @app.route("/startMotorPower/<motor>/<power>")
 def startMotorPower(motor, power):
     try:
-        motorPower[motor] = power
+        motorPower[motor] = int(power)
     except Exception as e:
       logging.error(traceback.format_exc())
     
     print("Set motor power of " + motor + " to " + power)
 
     return ""
- 
+
+@app.route("/motorOn/<motor>")
+def motorOn(motor):
+    req.write_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, motorDirection.get(motor, 1) * motorPower.get(motor, 50)))    
+    
+    return ""
+
+@app.route("/motorOff/<motor>")
+def motorOff(motor):
+    req.write_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, 0x00))
+
+    return ""
+
 @app.route("/motorOnFor/<id>/<motor>/<duration>")
 def motorOnFor(id, motor, duration):
     busy[id] = True
     #print("Start " + motorPower.get(motor, 50) + " " + duration)
     print "motor " + str(req.motor)
-    req.write_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, int(motorPower.get(motor, 50))))
+    motorOn(motor)
     sleep(float(duration))
     del busy[id]
     print "Stop"
     
-    req.write_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, 0x00))
+    motorOff(motor)
     return ""
 
 @app.route("/poll")
