@@ -52,7 +52,7 @@ class Requester(GATTRequester):
         self.sensor = [0] * 7
         self.button = 0
         self.direction = 0
-        self.distance = 0
+        self.distance = 10
 
     def on_notification(self, handle, data):
 
@@ -61,7 +61,7 @@ class Requester(GATTRequester):
         if handle == HANDLE_PORT:
             port, attach = unpack("<BB", data[0:2])            
             if attach: 
-                print("Notification on handle: {} {} {}".format(handle, len(data), binascii.hexlify(data)))
+                print("Notification on handle: {} {} {}".format(hex(handle), len(data), binascii.hexlify(data)))
 
                 hubIndex, type = unpack("<BB", data[2:4])
                 self.sensor[port] = type
@@ -74,11 +74,17 @@ class Requester(GATTRequester):
                     self.motor = port
 
         elif handle == HANDLE_SENSOR_VALUE:
-            revision, port = unpack("<BB", data[0:2])
-            if self.sensor[port] == TYPE_TILT:            
-              self.direction = unpack("<B", data[2:])[0]
-            elif self.sensor[port] == TYPE_MOTION:
-              self.distance = unpack("<B", data[2:])[0]              
+            revision = unpack("<B", data[0:1])
+            data = data[1:]
+            while data:
+              port = unpack("<B", data[0:1])[0]
+              if self.sensor[port] == TYPE_TILT:            
+                self.direction = unpack("<B", data[1:2])[0]
+              elif self.sensor[port] == TYPE_MOTION:
+                print("Notification on handle: {} {} {}".format(hex(handle), len(data), binascii.hexlify(data)))
+                self.distance = unpack("<B", data[1:2])[0]
+                print "distance " + str(self.distance)
+              data = data[2:]
         elif handle == HANDLE_BUTTON:
             self.button = unpack("<B", data[0])[0]
         else:
@@ -91,6 +97,7 @@ log.setLevel(logging.ERROR)
 
 ADDRESS = sys.argv[1]
 
+motorDirection = {}
 motorPower = {}
 busy = {}
 
@@ -131,7 +138,7 @@ def setLight(color):
 
 @app.route("/setMotorDirection/<motor>/<direction>")
 def setMotorDirection(motor, direction):
-    DIRECTION = ["that way", "other way", "this way"]
+    DIRECTION = ["that way", "other way", "this way"]    
     try:
         motorDirection[motor] = DIRECTION.index(direction) - 1
     except Exception as e:
@@ -154,7 +161,8 @@ def startMotorPower(motor, power):
 
 @app.route("/motorOn/<motor>")
 def motorOn(motor):
-    req.write_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, motorDirection.get(motor, 1) * motorPower.get(motor, 50)))    
+    print "motor on " + str(motorDirection.get(motor, 1) * motorPower.get(motor, 50))
+    req.write_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, motorDirection.get(motor, 1) * motorPower.get(motor, 50)))
     
     return ""
 
