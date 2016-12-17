@@ -22,6 +22,9 @@ HANDLE_CCC_PORT = 0x16
 HANDLE_CCC_SENSOR_VALUE = 0x33
 
 TYPE_MOTOR = 0x1
+TYPE_VOLTAGE = 0x14
+TYPE_CURRENT = 0x15
+TYPE_PIEZO_TONE = 0x16
 TYPE_RGB_LIGHT = 0x17
 TYPE_TILT = 0x22
 TYPE_MOTION = 0x23
@@ -53,6 +56,8 @@ class Requester(GATTRequester):
         self.button = 0
         self.direction = 0
         self.distance = 10
+        self.voltage = 0
+        self.current = 0
 
     def on_notification(self, handle, data):
 
@@ -72,6 +77,10 @@ class Requester(GATTRequester):
                     self.write_without_response_by_handle(HANDLE_INPUT_COMMAND, pack("<BBBBBIBB", COMMAND_ID_INPUT_FORMAT, COMMAND_TYPE_WRITE, port, TYPE_MOTION, 0, 1, INPUT_FORMAT_UNIT_RAW, 1))
                 elif type == TYPE_MOTOR:
                     self.motor = port
+                elif type == TYPE_VOLTAGE:
+                    self.write_without_response_by_handle(HANDLE_INPUT_COMMAND, pack("<BBBBBIBB", COMMAND_ID_INPUT_FORMAT, COMMAND_TYPE_WRITE, port, TYPE_VOLTAGE, 0, 30, INPUT_FORMAT_UNIT_SI, 1))
+                elif type == TYPE_CURRENT:
+                    self.write_without_response_by_handle(HANDLE_INPUT_COMMAND, pack("<BBBBBIBB", COMMAND_ID_INPUT_FORMAT, COMMAND_TYPE_WRITE, port, TYPE_CURRENT, 0, 30, INPUT_FORMAT_UNIT_SI, 1))
 
         elif handle == HANDLE_SENSOR_VALUE:
             revision = unpack("<B", data[0:1])
@@ -80,11 +89,20 @@ class Requester(GATTRequester):
               port = unpack("<B", data[0:1])[0]
               if self.sensor[port] == TYPE_TILT:            
                 self.direction = unpack("<B", data[1:2])[0]
+                data = data[2:]
               elif self.sensor[port] == TYPE_MOTION:
                 print("Notification on handle: {} {} {}".format(hex(handle), len(data), binascii.hexlify(data)))
                 self.distance = unpack("<B", data[1:2])[0]
                 print "distance " + str(self.distance)
               data = data[2:]
+              elif self.sensor[port] == TYPE_VOLTAGE:
+                self.voltage = unpack("<f", data[1:5])[0]                
+                data = data[5:]
+              elif self.sensor[port] == TYPE_CURRENT:
+                self.current = unpack("<f", data[1:5])[0]                
+                data = data[5:]
+              else:
+                break
         elif handle == HANDLE_BUTTON:
             self.button = unpack("<B", data[0])[0]
         else:
@@ -194,6 +212,8 @@ def poll():
     result.append("button1 " + BUTTON_STR[req.button])
     result.append("tilt " + TILT_STR[req.direction])
     result.append("distance " + str(req.distance))
+    result.append("voltage1 " + str(int(req.voltage)))
+    result.append("current1 " + str(int(req.current)))
     for id in busy:
       result.append("_busy " + id)
     return "\n".join(result)
