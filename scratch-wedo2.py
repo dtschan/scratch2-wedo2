@@ -52,6 +52,7 @@ class Requester(GATTRequester):
         super(Requester, self).__init__(address, connect)
 
         self.motor = 0        
+        self.piezoTone = 0
         self.sensor = [0] * 7
         self.button = 0
         self.direction = 0
@@ -81,6 +82,8 @@ class Requester(GATTRequester):
                     self.write_without_response_by_handle(HANDLE_INPUT_COMMAND, pack("<BBBBBIBB", COMMAND_ID_INPUT_FORMAT, COMMAND_TYPE_WRITE, port, TYPE_VOLTAGE, 0, 30, INPUT_FORMAT_UNIT_SI, 1))
                 elif type == TYPE_CURRENT:
                     self.write_without_response_by_handle(HANDLE_INPUT_COMMAND, pack("<BBBBBIBB", COMMAND_ID_INPUT_FORMAT, COMMAND_TYPE_WRITE, port, TYPE_CURRENT, 0, 30, INPUT_FORMAT_UNIT_SI, 1))
+                elif type == TYPE_PIEZO_TONE:
+                    self.piezoTone = port
 
         elif handle == HANDLE_SENSOR_VALUE:
             revision = unpack("<B", data[0:1])
@@ -201,6 +204,22 @@ def motorOnFor(id, motor, duration):
     print "Stop"
     
     motorOff(motor)
+    return ""
+
+@app.route("/playSound/<id>/<note>/<octave>/<duration>")
+def playSound(id, note, octave, duration):
+    NOTES = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ]
+    octave = float(octave)
+    note = float(NOTES.index(note))
+    # https://en.wikipedia.org/wiki/Equal_temperament
+    frequency = round(440.0 * 2 ** (((octave - 4) * 12 + note - 9) / 12))
+    duration = float(duration)
+    print str(note) + " " + str(octave) + " " + str(frequency) + " " + str(duration)
+    req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbhh", req.piezoTone, 0x02, 0x04, frequency, round(duration * 1000.0)))
+    busy[id] = True
+    sleep(duration - 1.0/30.0)
+    del busy[id]
+
     return ""
 
 @app.route("/poll")
