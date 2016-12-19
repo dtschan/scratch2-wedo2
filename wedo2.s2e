@@ -1,0 +1,24 @@
+{
+        "extensionName": "WeDo 2",
+        "extensionPort": 17311,
+        "url": "https://github.com/dtschan/scratch2-wedo2",
+        "blockSpecs": 
+        [
+          [ "w", "turn %m.motor on for %n secs", "motorOnFor", "motor", 1 ],
+          [ " ", "turn %m.motor on", "motorOn", "motor" ],
+          [ " ", "turn %m.motor off", "motorOff", "motor" ],
+          [ " ", "set %m.motor power to %n", "startMotorPower", "motor", 100 ],
+          [ " ", "set %m.motor direction to %m.motorDirection", "setMotorDirection", "motor", "this way" ],
+          [ " ", "set light to %m.lightColor", "setLight", "off" ],
+          [ "w", "play %m.playNote %m.playOctave for %n secs", "playSound", "C", "6", 0.5 ],
+          [ "b", "button pressed?", "button1" ],
+          [ "b", "tilted %m.tiltDirAny ?", "isTilted", "any" ],
+          [ "r", "tilt", "tilt" ],
+          [ "r", "distance", "distance" ],
+          [ "r", "sensorA", "sensorA" ],
+          [ "r", "sensorB", "sensorB" ],
+          [ "r", "voltage", "voltage1" ],
+          [ "r", "current", "current1" ],
+          [ "r", "battery", "battery1" ]
+        ]
+}

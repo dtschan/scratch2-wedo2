@@ -16,10 +16,12 @@ HANDLE_BUTTON = 0x11
 HANDLE_SENSOR_VALUE = 0x32
 HANDLE_INPUT_COMMAND = 0x3a
 HANDLE_OUTPUT_COMMAND = 0x3d
+HANDLE_BATTERY_LEVEL = 0x48
 
 HANDLE_CCC_BUTTON = 0x12
 HANDLE_CCC_PORT = 0x16
 HANDLE_CCC_SENSOR_VALUE = 0x33
+HANDLE_CCC_BATTERY_LEVEL = 0x49
 
 TYPE_MOTOR = 0x1
 TYPE_VOLTAGE = 0x14
@@ -59,6 +61,7 @@ class Requester(GATTRequester):
         self.distance = 10
         self.voltage = 0
         self.current = 0
+        self.battery_level = 100
 
     def on_notification(self, handle, data):
 
@@ -108,6 +111,8 @@ class Requester(GATTRequester):
                 break
         elif handle == HANDLE_BUTTON:
             self.button = unpack("<B", data[0])[0]
+        elif handle == HANDLE_BATTERY_LEVEL:
+            self.battery_level = unpack("<B", data[0])[0]
         else:
             print("Notification on handle: {} {} {}".format(handle, len(data), binascii.hexlify(data)))
 
@@ -129,6 +134,7 @@ req.connect(True)
 req.write_without_response_by_handle(HANDLE_CCC_BUTTON, pack("<h", 0x0001))
 req.write_without_response_by_handle(HANDLE_CCC_PORT, pack("<h", 0x0001))
 req.write_without_response_by_handle(HANDLE_CCC_SENSOR_VALUE, pack("<h", 0x0001))
+req.write_without_response_by_handle(HANDLE_CCC_BATTERY_LEVEL, pack("<h", 0x0001))
 
 @app.route("/crossdomain.xml")
 def crossdomain():
@@ -233,6 +239,7 @@ def poll():
     result.append("distance " + str(req.distance))
     result.append("voltage1 " + str(int(req.voltage)))
     result.append("current1 " + str(int(req.current)))
+    result.append("battery1 " + str(req.battery_level))
     for id in busy:
       result.append("_busy " + id)
     return "\n".join(result)
