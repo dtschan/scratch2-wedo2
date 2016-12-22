@@ -93,14 +93,14 @@ class Requester(GATTRequester):
             data = data[1:]
             while data:
               port = unpack("<B", data[0:1])[0]
-              if self.sensor[port] == TYPE_TILT:            
+              if self.sensor[port] == TYPE_TILT:
                 self.direction = unpack("<B", data[1:2])[0]
                 data = data[2:]
               elif self.sensor[port] == TYPE_MOTION:
                 print("Notification on handle: {} {} {}".format(hex(handle), len(data), binascii.hexlify(data)))
                 self.distance = unpack("<B", data[1:2])[0]
                 print "distance " + str(self.distance)
-              data = data[2:]
+                data = data[2:]
               elif self.sensor[port] == TYPE_VOLTAGE:
                 self.voltage = unpack("<f", data[1:5])[0]                
                 data = data[5:]
@@ -146,7 +146,7 @@ def crossdomain():
 
 @app.route("/reset_all")
 def reset():
-    req.write_by_handle(HANDLE_OUTPUT_COMMAND, "\x06\x04\x01\x00")
+    req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, "\x06\x04\x01\x00")
     return ""
 
 @app.route("/setLight/<color>")
@@ -160,7 +160,7 @@ def setLight(color):
 
     print("Set light color to " + str(color))
     
-    req.write_by_handle(HANDLE_OUTPUT_COMMAND, "\x06\x04\x01" + chr(color))
+    req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, "\x06\x04\x01" + chr(color))
     return ""
 
 @app.route("/setMotorDirection/<motor>/<direction>")
@@ -189,14 +189,16 @@ def startMotorPower(motor, power):
 @app.route("/motorOn/<motor>")
 def motorOn(motor):
     print "motor on " + str(motorDirection.get(motor, 1) * motorPower.get(motor, 50))
-    req.write_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, motorDirection.get(motor, 1) * motorPower.get(motor, 50)))
+    sleep(1.0/30.0)
+    print "go"
+    req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, motorDirection.get(motor, 1) * motorPower.get(motor, 50)))
     
     return ""
 
 @app.route("/motorOff/<motor>")
 def motorOff(motor):
-    req.write_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, 0x00))
-
+    req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbb", req.motor, 0x01, 0x01, 0))
+    print
     return ""
 
 @app.route("/motorOnFor/<id>/<motor>/<duration>")
