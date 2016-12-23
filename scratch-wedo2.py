@@ -146,7 +146,19 @@ def crossdomain():
 
 @app.route("/reset_all")
 def reset():
+    motorDirection = {}
+    motorPower = {}
+    busy = {}
+
+    # Stop motors
     req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, "\x06\x04\x01\x00")
+    req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, "\x06\x04\x02\x00")
+
+    # Stop piezo tone generator
+    req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bb", req.piezoTone, 0x03))
+
+    setLight("off")
+
     return ""
 
 @app.route("/setLight/<color>")
