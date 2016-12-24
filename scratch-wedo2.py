@@ -8,6 +8,7 @@ import binascii
 
 from gattlib import GATTRequester
 from time import sleep
+from threading import Timer
 from struct import pack, unpack
 from flask import Flask
 
@@ -219,12 +220,15 @@ def motorOnFor(id, motor, duration):
     #print("Start " + motorPower.get(motor, 50) + " " + duration)
     print "motor " + str(req.motor)
     motorOn(motor)
-    sleep(float(duration))
+    
+    Timer(float(duration), endMotorOnFor, [id, motor]).start()
+
+    return ""
+
+def endMotorOnFor(id, motor):        
+    motorOff(motor)
     del busy[id]
     print "Stop"
-    
-    motorOff(motor)
-    return ""
 
 @app.route("/playSound/<id>/<note>/<octave>/<duration>")
 def playSound(id, note, octave, duration):
@@ -237,19 +241,23 @@ def playSound(id, note, octave, duration):
     print str(note) + " " + str(octave) + " " + str(frequency) + " " + str(duration)
     req.write_without_response_by_handle(HANDLE_OUTPUT_COMMAND, pack("<bbbhh", req.piezoTone, 0x02, 0x04, frequency, round(duration * 1000.0)))
     busy[id] = True
-    sleep(duration - 1.0/30.0)
-    del busy[id]
-
+    
+    Timer(duration - 1.0/30.0, endPlaySound, [id]).start()
+    
     return ""
+
+def endPlaySound(id):
+    del busy[id]
 
 @app.route("/poll")
 def poll():
-    BUTTON_STR = ('false', 'true')
+    BOOL = ('false', 'true')
     TILT_STR = ( "any", "any", "any", "up", "any", "right", "any", "left", "any", "down", "any" )
 
     result = []
-    result.append("button1 " + BUTTON_STR[req.button])
+    result.append("button1 " + BOOL[req.button])
     result.append("tilt " + TILT_STR[req.direction])
+    result.append("isTilted up " + BOOL[req.direction == TILT_BACKWARD])
     result.append("distance " + str(req.distance))
     result.append("voltage1 " + str(int(req.voltage)))
     result.append("current1 " + str(int(req.current)))
