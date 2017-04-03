@@ -2,7 +2,7 @@
         "extensionName": "WeDo 2",
         "extensionPort": 17311,
         "url": "https://github.com/dtschan/scratch2-wedo2",
-        "blockSpecs": 
+        "blockSpecs":
         [
           [ "w", "turn %m.motor on for %n secs", "motorOnFor", "motor", 1 ],
           [ " ", "turn %m.motor on", "motorOn", "motor" ],
@@ -20,5 +20,47 @@
           [ "r", "voltage", "voltage1" ],
           [ "r", "current", "current1" ],
           [ "r", "battery", "battery1" ]
-        ]
+        ],
+        "menus": {
+          "motorDirection": ["this way", "that way", "other way"],
+          "motor": ["motor", "motor A", "motor B", "all motors"],
+          "translate": ["motor",
+            "motor A",
+            "motor B",
+            "all motors",
+            "this way",
+            "that way",
+            "other way",
+            "distance",
+            "custom",
+            "tilt",
+            "sensorA",
+            "sensorB",
+            "button1",
+            "voltage1",
+            "current1",
+            "off",
+            "pink",
+            "purple",
+            "blue",
+            "sky blue",
+            "teal",
+            "green",
+            "yellow",
+            "orange",
+            "red",
+            "white",
+            "random",
+            "any",
+            "up",
+            "down",
+            "left",
+            "right"],
+          "playNote": ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+          "lightColor": ["off", "pink", "purple", "blue", "sky blue", "teal", "green", "yellow", "orange", "red", "white", "random"],
+          "tiltDirAny": ["any", "up", "down", "left", "right"],
+          "mtilt": ["tilt", "custom"],
+          "mdistance": ["distance", "custom"],
+          "playOctave": ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
+        }
 }
