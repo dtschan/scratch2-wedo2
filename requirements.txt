@@ -1,2 +1,2 @@
-gattlib
+git+https://github.com/matthewelse/pygattlib
 flask
